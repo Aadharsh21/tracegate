@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from .check import TraceResult
 
 
@@ -70,3 +72,21 @@ def format_markdown(result: TraceResult) -> str:
     verdict = "PASS" if result.passed else "FAIL"
     lines += ["", f"**Coverage:** {_summary(result)}. **Result:** {verdict}"]
     return "\n".join(lines)
+
+
+def format_json(result: TraceResult) -> str:
+    """Return the full result as JSON for scripts and dashboards."""
+    data = {
+        "passed": result.passed,
+        "requirements": result.total,
+        "covered": result.covered,
+        "coverage": round(result.coverage, 4),
+        "uncovered": [req.req_id for req in result.uncovered],
+        "dangling": [
+            {"id": tag.req_id, "test": tag.test, "path": tag.path, "line": tag.line}
+            for tag in result.dangling
+        ],
+        "duplicates": result.duplicates,
+        "matrix": {req_id: [tag.test for tag in tags] for req_id, tags in result.matrix.items()},
+    }
+    return json.dumps(data, indent=2)

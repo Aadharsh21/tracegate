@@ -44,3 +44,8 @@ and 2 when no requirements are found.
 
 When run with `--format markdown`, the tool shall print a Markdown table that maps each
 requirement to the tests that cover it, followed by the coverage summary and the result.
+
+### REQ-TG-009: JSON report
+
+When run with `--format json`, the tool shall print a JSON object with the coverage numbers,
+the uncovered and dangling IDs, and the full requirement-to-test matrix.

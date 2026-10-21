@@ -10,6 +10,13 @@ from .check import check
 from .parse import DEFAULT_ID_PATTERN, collect_tags, parse_requirements
 
 
+FORMATTERS = {
+    "text": report.format_text,
+    "markdown": report.format_markdown,
+    "json": report.format_json,
+}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="tracegate",
@@ -21,7 +28,7 @@ def build_parser() -> argparse.ArgumentParser:
                         help="test files or folders (default: tests)")
     parser.add_argument("--id-pattern", default=DEFAULT_ID_PATTERN, metavar="REGEX",
                         help="regular expression for requirement IDs")
-    parser.add_argument("--format", choices=["text", "markdown"], default="text",
+    parser.add_argument("--format", choices=sorted(FORMATTERS), default="text",
                         help="report format (default: text)")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
@@ -34,8 +41,5 @@ def main(argv: list[str] | None = None) -> int:
         print(f"tracegate: no requirements found in {' '.join(args.reqs)}", file=sys.stderr)
         return 2
     result = check(requirements, collect_tags(args.tests, args.id_pattern))
-    if args.format == "markdown":
-        print(report.format_markdown(result))
-    else:
-        print(report.format_text(result))
+    print(FORMATTERS[args.format](result))
     return 0 if result.passed else 1
