@@ -44,6 +44,11 @@ class ParseRequirementsTest(unittest.TestCase):
         ids = [r.req_id for r in parse_requirements([self.root])]
         self.assertEqual(ids, ["REQ-AB-001", "REQ-AB-002"])
 
+    def test_strips_closing_hashes_from_titles(self):
+        """Covers: REQ-TG-001"""
+        write(self.root, "reqs.md", "### REQ-AB-001: Start the pump ###\n")
+        self.assertEqual(parse_requirements([self.root])[0].title, "Start the pump")
+
     def test_accepts_a_custom_id_pattern(self):
         """Covers: REQ-TG-001"""
         write(self.root, "reqs.md", "## SRS-12: Custom scheme\n")
