@@ -31,3 +31,9 @@ A good commit contains one logical change and explains why it was made.
 - Leave one blank line, then write a body wrapped at 72 characters that explains *why*.
 - Clean up work-in-progress commits before opening a pull request:
   `git commit --fixup <sha>` and then `git rebase -i --autosquash main`.
+
+## Requirements and tests
+
+Every requirement in `docs/requirements.md` needs at least one test whose docstring or comment
+starts with `Covers:` and lists its ID. If a pull request adds a requirement, it must add the
+covering test too, or the `Traceability gate` job fails and the pull request cannot be merged.
