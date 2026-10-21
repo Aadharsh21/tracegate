@@ -18,6 +18,8 @@ duplicated, so the CI step fails on its own.
 Add `--format markdown` to print the same result as a requirement-to-test table. CI appends that
 table to the summary page of every run.
 
+Add `--format json` for a machine-readable report that scripts and dashboards can consume.
+
 ## How tagging works
 
 Requirements are Markdown headings that start with an ID, for example `### REQ-TG-005: Detect uncovered requirements`.
