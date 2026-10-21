@@ -39,3 +39,8 @@ together with the test it belongs to.
 The tool shall print a summary with the coverage percentage and exit with status 0 when every
 requirement is covered and nothing is dangling or duplicated, 1 when any of those checks fails,
 and 2 when no requirements are found.
+
+### REQ-TG-008: Markdown traceability matrix
+
+When run with `--format markdown`, the tool shall print a Markdown table that maps each
+requirement to the tests that cover it, followed by the coverage summary and the result.
