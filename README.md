@@ -5,20 +5,42 @@
 A small command-line tool that checks requirements-to-test traceability and works as a CI gate:
 the build fails when a requirement has no test, or when a test points at a requirement that does not exist.
 
+Python 3.10 or newer, no dependencies.
+
 ## Usage
 
 ```bash
 python -m tracegate --reqs docs --tests tests
 ```
 
-tracegate prints one line per requirement with the number of tests that cover it, then `PASS` or `FAIL`.
-It exits with status 1 when a requirement is uncovered, a tag points at an unknown ID, or an ID is
-duplicated, so the CI step fails on its own.
+```text
+tracegate: 9 requirements, 9 covered (100.0%)
 
-Add `--format markdown` to print the same result as a requirement-to-test table. CI appends that
-table to the summary page of every run.
+  REQ-TG-001  Parse requirement headings        5 tests
+  REQ-TG-002  Detect duplicate requirement IDs  2 tests
+  ...
+  REQ-TG-009  JSON report                       3 tests
 
-Add `--format json` for a machine-readable report that scripts and dashboards can consume.
+PASS: every requirement is covered by at least one test.
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `--reqs PATH...` | `docs` | Requirement files or folders (every `.md` file is read) |
+| `--tests PATH...` | `tests` | Test files or folders (`.py`, `.md`, `.c`, `.h`, `.cpp`) |
+| `--id-pattern REGEX` | `REQ-[A-Z][A-Z0-9]*-\d+` | Your project's requirement ID scheme |
+| `--format` | `text` | `text`, `markdown` (a requirement-to-test table) or `json` (for scripts and dashboards) |
+
+### Exit status
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Every requirement is covered, and nothing is dangling or duplicated |
+| 1 | A requirement is uncovered, a tag points at an unknown ID, or an ID is duplicated |
+| 2 | No requirements were found (usually a wrong `--reqs` path) |
+
+In CI, the `Traceability gate` job fails on a non-zero exit status and appends the Markdown matrix to
+the summary page of every run.
 
 ## How tagging works
 
@@ -32,6 +54,11 @@ def test_reports_uncovered_requirement(self):
 
 tracegate checks itself: every requirement in [docs/requirements.md](docs/requirements.md) is covered by
 a unit test, and the `Traceability gate` job in CI enforces it on every pull request.
+
+## Contributing
+
+The branching model, commit conventions and the requirements rule are in [CONTRIBUTING.md](CONTRIBUTING.md).
+Release notes are in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
