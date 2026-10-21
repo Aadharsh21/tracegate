@@ -62,6 +62,14 @@ class CliTest(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn("no requirements found", err)
 
+    def test_markdown_format_prints_a_table(self):
+        """Covers: REQ-TG-008"""
+        write(self.root, "docs/reqs.md", "### REQ-AB-001: Start the pump\n")
+        write(self.root, "tests/test_pump.py", "def test_start():\n    # Covers: REQ-AB-001\n")
+        code, out, _ = self.run_cli("--format", "markdown")
+        self.assertEqual(code, 0)
+        self.assertIn("| Requirement | Title | Covered by | Status |", out)
+
 
 if __name__ == "__main__":
     unittest.main()

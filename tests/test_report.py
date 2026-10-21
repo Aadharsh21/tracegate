@@ -4,7 +4,7 @@ import unittest
 
 from tracegate.check import check
 from tracegate.parse import CoverTag, Requirement
-from tracegate.report import format_text
+from tracegate.report import format_markdown, format_text
 
 
 def req(req_id, title="Title"):
@@ -38,6 +38,27 @@ class TextReportTest(unittest.TestCase):
         text = format_text(check([req("REQ-AB-001")], [tag("REQ-AB-001"), tag("REQ-AB-099", "test_x.py::test_old")]))
         self.assertIn("dangling    REQ-AB-099 in test_x.py::test_old", text)
         self.assertIn("FAIL: 1 dangling tag", text)
+
+
+class MarkdownReportTest(unittest.TestCase):
+    def test_matrix_has_a_row_per_requirement(self):
+        """Covers: REQ-TG-008"""
+        md = format_markdown(check(
+            [req("REQ-AB-001", "Start the pump"), req("REQ-AB-002", "Stop the pump")],
+            [tag("REQ-AB-001", "test_pump.py::test_start")],
+        ))
+        self.assertIn("| REQ-AB-001 | Start the pump | `test_pump.py::test_start` | ✅ covered |", md)
+        self.assertIn("| REQ-AB-002 | Stop the pump | none | ❌ missing |", md)
+
+    def test_matrix_ends_with_coverage_and_result(self):
+        """Covers: REQ-TG-008"""
+        md = format_markdown(check([req("REQ-AB-001"), req("REQ-AB-002")], [tag("REQ-AB-001")]))
+        self.assertTrue(md.endswith("**Coverage:** 2 requirements, 1 covered (50.0%). **Result:** FAIL"))
+
+    def test_escapes_pipes_in_titles(self):
+        """Covers: REQ-TG-008"""
+        md = format_markdown(check([req("REQ-AB-001", "Read | write")], [tag("REQ-AB-001")]))
+        self.assertIn("| Read \\| write |", md)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,9 @@ tracegate prints one line per requirement with the number of tests that cover it
 It exits with status 1 when a requirement is uncovered, a tag points at an unknown ID, or an ID is
 duplicated, so the CI step fails on its own.
 
+Add `--format markdown` to print the same result as a requirement-to-test table. CI appends that
+table to the summary page of every run.
+
 ## How tagging works
 
 Requirements are Markdown headings that start with an ID, for example `### REQ-TG-005: Detect uncovered requirements`.

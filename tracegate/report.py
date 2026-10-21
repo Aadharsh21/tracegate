@@ -47,3 +47,26 @@ def format_text(result: TraceResult) -> str:
         lines.append(f"  duplicate   {req_id} is defined more than once")
     lines += ["", _verdict(result)]
     return "\n".join(lines)
+
+
+def format_markdown(result: TraceResult) -> str:
+    """Return the traceability matrix as a Markdown table (for GitHub job summaries)."""
+    lines = [
+        "### Traceability matrix",
+        "",
+        "| Requirement | Title | Covered by | Status |",
+        "| --- | --- | --- | --- |",
+    ]
+    for req in result.requirements:
+        tests = result.matrix[req.req_id]
+        covered_by = "<br>".join(f"`{tag.test}`" for tag in tests) or "none"
+        status = "✅ covered" if tests else "❌ missing"
+        title = req.title.replace("|", "\\|")
+        lines.append(f"| {req.req_id} | {title} | {covered_by} | {status} |")
+    notes = [f"- ❌ dangling tag `{tag.req_id}` in `{tag.test}`" for tag in result.dangling]
+    notes += [f"- ❌ `{req_id}` is defined more than once" for req_id in result.duplicates]
+    if notes:
+        lines += [""] + notes
+    verdict = "PASS" if result.passed else "FAIL"
+    lines += ["", f"**Coverage:** {_summary(result)}. **Result:** {verdict}"]
+    return "\n".join(lines)
