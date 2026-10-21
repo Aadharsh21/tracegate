@@ -24,3 +24,18 @@ a line shall be ignored, so prose and test fixtures do not create false links.
 The tool shall attribute each `Covers:` tag to the nearest preceding test function
 (`def test_...` in Python, `void test_...` in C) or, in a Markdown test specification, to the
 nearest preceding heading. A tag outside any test is reported by file and line.
+
+### REQ-TG-005: Detect uncovered requirements
+
+The tool shall list every requirement that no `Covers:` tag references.
+
+### REQ-TG-006: Detect dangling references
+
+The tool shall list every `Covers:` tag that references a requirement ID that is not defined,
+together with the test it belongs to.
+
+### REQ-TG-007: Report and exit status
+
+The tool shall print a summary with the coverage percentage and exit with status 0 when every
+requirement is covered and nothing is dangling or duplicated, 1 when any of those checks fails,
+and 2 when no requirements are found.
