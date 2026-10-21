@@ -38,7 +38,7 @@ def iter_files(paths: Iterable[str | Path], suffixes: tuple[str, ...]) -> Iterat
 
 def _heading_regex(id_pattern: str) -> re.Pattern[str]:
     return re.compile(
-        rf"^\s{{0,3}}#{{1,6}}\s+(?P<id>{id_pattern})(?![\w-])[\s:.-]*(?P<title>.*?)\s*$"
+        rf"^\s{{0,3}}#{{1,6}}\s+(?P<id>{id_pattern})(?![\w-])[\s:.-]*(?P<title>.*?)(?:\s+#+)?\s*$"
     )
 
 
