@@ -31,3 +31,6 @@ jobs:
           python-version: "3.12"
       - name: Fail if any requirement has no test
         run: python -m tracegate --reqs docs --tests tests
+      - name: Publish the traceability matrix
+        if: always()
+        run: python -m tracegate --reqs docs --tests tests --format markdown >> "$GITHUB_STEP_SUMMARY" || true
