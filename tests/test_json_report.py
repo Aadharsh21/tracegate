@@ -23,19 +23,19 @@ def tag(req_id, test="test_x.py::test_x"):
 
 class JsonReportTest(unittest.TestCase):
     def test_report_has_coverage_numbers(self):
-        """Covers: REQ-TG-008"""
+        """Covers: REQ-TG-009"""
         data = json.loads(format_json(check([req("REQ-AB-001"), req("REQ-AB-002")], [tag("REQ-AB-001")])))
         self.assertEqual((data["requirements"], data["covered"], data["coverage"]), (2, 1, 0.5))
         self.assertEqual(data["uncovered"], ["REQ-AB-002"])
         self.assertFalse(data["passed"])
 
     def test_matrix_maps_ids_to_test_names(self):
-        """Covers: REQ-TG-008"""
+        """Covers: REQ-TG-009"""
         data = json.loads(format_json(check([req("REQ-AB-001")], [tag("REQ-AB-001", "test_pump.py::test_start")])))
         self.assertEqual(data["matrix"], {"REQ-AB-001": ["test_pump.py::test_start"]})
 
     def test_cli_prints_valid_json(self):
-        """Covers: REQ-TG-008"""
+        """Covers: REQ-TG-009"""
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "docs").mkdir()
